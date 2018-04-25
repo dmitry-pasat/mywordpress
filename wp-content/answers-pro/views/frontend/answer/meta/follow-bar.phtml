@@ -1,0 +1,24 @@
+<?php
+
+?>
+<ul class="cma-follow-bar cma-follow-bar-<?php echo $cssClassName; ?>">
+
+	<?php if (CMA_ThreadNewsletter::canBeFollower()): ?>
+		<?php $isFollower = CMA_ThreadNewsletter::isNewsletterFollower(); ?>
+		<li><a href="<?php echo esc_attr(CMA::permalink()); ?>" class="cma-follow-new-threads-link <?php echo ($isFollower ? 'cma-is-follower' : '');
+			?>" data-nonce="<?php echo esc_attr(wp_create_nonce('cma_follow'));
+			?>" data-text-unfollow="<?php echo esc_attr(CMA_Labels::getLocalized('unfollow_new_threads'));
+			?>"  data-text-follow="<?php echo esc_attr(CMA_Labels::getLocalized('follow_new_threads')); ?>"><?php
+			echo CMA_Labels::getLocalized($isFollower ? 'unfollow_new_threads' : 'follow_new_threads'); ?></a></li>
+	<?php endif; ?>
+	
+	<?php if (!empty($category) AND CMA_Category::canBeFollower()): ?>
+		<?php $isCategoryFollower = $category->getFollowersEngine()->isFollower(); ?>
+		<li><a href="<?php echo esc_attr($category->getPermalink()); ?>" class="cma-follow-link <?php echo ($isCategoryFollower ? 'cma-is-follower' : '');
+			?>" data-nonce="<?php echo esc_attr(wp_create_nonce('cma_follow')); ?>" data-category-id="<?php echo $category->getId();
+			?>" data-text-unfollow="<?php echo esc_attr(CMA_Labels::getLocalized('unfollow_category'));
+			?>"  data-text-follow="<?php echo esc_attr(CMA_Labels::getLocalized('follow_category')); ?>"><?php
+			echo CMA_Labels::getLocalized($isCategoryFollower ? 'unfollow_category' : 'follow_category'); ?></a></li>
+	<?php endif; ?>
+	
+</ul>

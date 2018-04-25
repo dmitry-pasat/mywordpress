@@ -1,0 +1,522 @@
+<?php
+// Add an nonce field so we can check for it later.
+wp_nonce_field(CMPD_SLUG_NAME . '-custom-fields', CMPD_SLUG_NAME . '-custom-fields-nonce');
+$placeholder = array();
+$placeholder = apply_filters('cmpd_placecholders', $placeholder);
+
+$image = CMProductDirectoryBackend::getProductGalleryImageIds($post->ID);
+if (empty($image)) {
+    $default_image = CMPD_Settings::getOption(CMPD_Settings::OPTION_PRODUCT_DEFAULT_IMAGE);
+    $default_image = empty($default_image) ? CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-300-300.png' : $default_image;
+    $image['html'] = $default_image;
+    $image['width'] = 400;
+    $image['height'] = 400;
+    $image['id'] = 'default';
+}
+$img_id = CMProductDirectory::meta($post->ID, 'cmpd_product_gallery_id');
+$image_warning = CMPD_Settings::getOptionConfig(CMPD_Settings::OPTION_PRODUCT_IMAGE_WARNING);
+$enambe_promoted = CMProductDirectory::meta($post->ID, 'cmpd_promoted');
+$display_video = CMPD_Settings::getOption(CMPD_Settings::OPTION_ACTIVATE_VIDEO_FIELD);
+
+$global_setting_msg = '<p class="cmpd_metabox_notice"><span>' . __('Notice', CMPD_SLUG_NAME) . ':</span> ' . __('General setting is disabled', CMPD_SLUG_NAME) . '. <a href="' . admin_url() . 'edit.php?post_type=cm-product&page=cm-product-directory-settings#tab-general" target="_BLANK">(Enable)</a></p>';
+?>
+
+
+
+<style>
+    .cmpd_metabox_settings_container,
+    .cmpd_metabox_item
+    { display: block !important; margin: auto; padding: auto; width: 100%; }
+
+    .cmpd_metabox_settings_container { border: none; }
+    .cmpd_metabox_item { margin-bottom: 1.5em; padding-bottom: 1.5em; border-bottom: 1px solid #cecece; position: relative; }
+
+    p.cmpd_metabox_heading { font-size: 1.5em; font-weight: bold; margin: 0; padding: 0; }
+</style>
+
+
+<div class="cmpd_metabox_settings_container">
+    <!-- Product Details -->
+    <div class="cmpd_metabox_item">
+        <p class="cmpd_metabox_heading"><?php _e('Product Details', CMPD_SLUG_NAME); ?></p>
+        <!-- Product cost -->
+        <p>
+            <label for="cmpd_product_cost" class="cmpd_metabox_label"><?php _e('Product cost', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_product_cost" name="cmpd_product_cost" placeholder="<?php echo empty($placeholder['form_product_cost_placeholder']) ? '$20 - $40' : esc_attr($placeholder['form_product_cost_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_product_cost')); ?>" class="large-text ui-autocomplete-input cm_input" />
+        </p>
+        <div class="clear"></div>
+        <!-- Purchase link -->
+        <p>
+            <label for="cmpd_purchase_link" class="cmpd_metabox_label"><?php _e('Purchase link', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_purchase_link" name="cmpd_purchase_link" placeholder="<?php echo empty($placeholder['form_purchase_link_placeholder']) ? 'http://www.link-to-product.com/' : esc_attr($placeholder['form_purchase_link_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_purchase_link')); ?>" class="large-text ui-autocomplete-input cm_input" />
+        </p>
+        <div class="clear"></div>
+        <!-- Demo link -->
+        <p>
+            <label for="cmpd_demo_link" class="cmpd_metabox_label"><?php _e('Demo link', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_demo_link" name="cmpd_demo_link" placeholder="<?php echo empty($placeholder['form_demo_link_placeholder']) ? 'http://www.link-to-product.com/' : esc_attr($placeholder['form_demo_link_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_demo_link')); ?>" class="large-text ui-autocomplete-input cm_input" />
+        </p>
+        <div class="clear"></div>
+        <!-- Product page link -->
+        <p>
+            <label for="cmpd_product_page" class="cmpd_metabox_label"><?php _e('Product page link', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_product_page" name="cmpd_product_page" placeholder="<?php echo empty($placeholder['form_page_link_placeholder']) ? 'http://www.link-to-product-page.com/' : esc_attr($placeholder['form_page_link_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_product_page')); ?>" class="large-text ui-autocomplete-input cm_input" />
+        </p>
+        <div class="clear"></div>
+
+        <!-- Product video link -->
+        <?php if ($display_video) : ?>
+            <p>
+                <label for="cmpd_product_video" class="cmpd_metabox_label"><?php _e('Product video link', CMPD_SLUG_NAME); ?></label>
+                <input type="text" id="cmpd_product_video" name="cmpd_product_video" placeholder="<?php echo empty($placeholder['form_video_url_placeholder']) ? 'Viemo/YouTube URL' : esc_attr($placeholder['form_video_url_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_product_video')); ?>" class="large-text ui-autocomplete-input cm_input" />
+            </p><br />
+            <p>Youtube/Vimeo video URL. E.g. <em>https://www.youtube.com/embed/123456789</em> or <em>https://player.vimeo.com/video/123456789</em></p>
+            <div class="clear"></div>
+        <?php endif; ?>
+
+        <!-- Additional Links -->
+        <?php
+        $display_add_links = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_LINKS);
+        if (!empty($display_add_links)) {
+            $add_link1 = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_LINKS_LABEL1);
+            $add_link2 = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_LINKS_LABEL2);
+            $add_link3 = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_LINKS_LABEL3);
+            $add_link4 = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_LINKS_LABEL4);
+
+            if (!empty($add_link1)) {
+                $add_link_1_placeholder = empty($placeholder['form_add_link1_placeholder']) ? 'https://www.your_link.com/' : esc_attr($placeholder['form_add_link1_placeholder']);
+                ?>
+                <p>
+                    <label for="cmpd_add_link1" class="cmpd_metabox_label"><?php _e($add_link1, CMPD_SLUG_NAME); ?></label>
+                    <input type="text" id="cmpd_add_link1" name="cmpd_add_link1" placeholder="<?php echo esc_attr($add_link_1_placeholder); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_add_link1')); ?>" class="large-text ui-autocomplete-input cm_input" />
+                </p>
+                <div class="clear"></div>
+                <?php
+            }
+
+            if (!empty($add_link2)) {
+                $add_link_2_placeholder = empty($placeholder['form_add_link2_placeholder']) ? 'https://www.your_link.com/' : esc_attr($placeholder['form_add_link2_placeholder']);
+                ?>
+                <p>
+                    <label for="cmpd_add_link2" class="cmpd_metabox_label"><?php _e($add_link2, CMPD_SLUG_NAME); ?></label>
+                    <input type="text" id="cmpd_add_link2" name="cmpd_add_link2" placeholder="<?php echo esc_attr($add_link_2_placeholder); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_add_link2')); ?>" class="large-text ui-autocomplete-input cm_input" />
+                </p>
+                <div class="clear"></div>
+                <?php
+            }
+
+            if (!empty($add_link3)) {
+                $add_link_3_placeholder = empty($placeholder['form_add_link3_placeholder']) ? 'https://www.your_link.com/' : esc_attr($placeholder['form_add_link3_placeholder']);
+                ?>
+                <p>
+                    <label for="cmpd_add_link3" class="cmpd_metabox_label"><?php _e($add_link3, CMPD_SLUG_NAME); ?></label>
+                    <input type="text" id="cmpd_add_link3" name="cmpd_add_link3" placeholder="<?php echo esc_attr($add_link_3_placeholder); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_add_link3')); ?>" class="large-text ui-autocomplete-input cm_input" />
+                </p>
+                <div class="clear"></div>
+                <?php
+            }
+
+            if (!empty($add_link4)) {
+                $add_link_4_placeholder = empty($placeholder['form_add_link4_placeholder']) ? 'https://www.your_link.com/' : esc_attr($placeholder['form_add_link4_placeholder']);
+                ?>
+                <p>
+                    <label for="cmpd_add_link4" class="cmpd_metabox_label"><?php _e($add_link4, CMPD_SLUG_NAME); ?></label>
+                    <input type="text" id="cmpd_add_link4" name="cmpd_add_link4" placeholder="<?php echo esc_attr($add_link_4_placeholder); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_add_link4')); ?>" class="large-text ui-autocomplete-input cm_input" />
+                </p>
+                <div class="clear"></div>
+                <?php
+            }
+        }
+        ?>
+    </div>
+    <div class="clear"></div>
+
+    <!-- Product Logo and Pitch -->
+    <div class="cmpd_metabox_item">
+        <p class="cmpd_metabox_heading"><?php _e('Product Logo and Pitch', CMPD_SLUG_NAME); ?></p>
+
+        <!-- Business Pitch -->
+        <p>
+            <label for="cmpd_product_pitch" class="cmpd_metabox_label"><?php _e('Product pitch', CMPD_SLUG_NAME); ?>
+            </label>
+            <?php $pitch_paceholder = empty($placeholder['form_product_pitch_placeholder']) ? '' : $placeholder['form_product_pitch_placeholder']; ?>
+            <textarea name="cmpd_product_pitch" id="cmpd_product_pitch" placeholder="<?php echo esc_attr($pitch_paceholder); ?>" class="cmpd_metabox_textarea"><?php echo esc_html(CMProductDirectory::meta($post->ID, 'cmpd_product_pitch')); ?></textarea>
+        </p>
+        <div class="clear"></div>
+
+        <!-- Promoted -->
+        <p>
+            <label for="cmpd_promoted" class="cmpd_metabox_label_ad"><?php _e('Is this product promoted?', CMPD_SLUG_NAME); ?>
+                <span class="cmpd_field_help" title="If checked, the product will be on the top of search results"> </span></label>
+            <input type="hidden" name="cmpd_promoted" value="2" >
+            <input type="checkbox" name="cmpd_promoted" id="cmpd_promoted" class="cm_checkbox" value="1" <?php checked($enambe_promoted, 1, 1) ?>>
+        </p>
+        <div class="clear"></div>
+
+        <!-- Image -->
+        <p>
+        <div class="cmpd_metabox_image" id="cmpd_product_images_container">1
+            <a href="#" id="cmpd_add_product_image" >Add Logo</a>
+            <span class="cmpd_field_help_logo" title="(must be a square ex: 300px:300px)
+                  Non square logo will be resized.
+                  Max size is 500px by 500px."> </span>
+
+            <input type="hidden" id="cmpd_product_gallery_id" name="cmpd_product_gallery_id" value="<?php echo esc_attr($img_id); ?>" />
+            <?php
+            if ($image['width'] > 500 && $image['height'] > 500 && $image_warning) {
+                echo '<span><strong>Your image size is biger then 500x500</strong></span>';
+            }
+
+            $img_html = !empty($image['html']) ? $image['html'] : '';
+            $img_id = !empty($image['id']) ? $image['id'] : '';
+
+            $img_html = empty($img_html) ? CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-300-300.png' : $img_html;
+            ?>
+            <ul class="cmpd_product_images" id="cmpd_product_images_list">
+                <li class="image" data-attachment_id="<?php echo esc_attr($img_id); ?>">
+                    <img class="default-image" id="cmpd_image" alt="No image was selected" src="<?php echo esc_attr($img_html); ?> ">
+                    <ul class="cmpc_actions">
+                        <li><a href="#" class="delete" title="<?php _e('Delete') ?>"><strong>[x] Remove Logo</strong></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        </p>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+
+    <?php
+    $input_disabled = '';
+    if (class_exists('CMBusinessDirectory')):
+        ?>
+        <!-- Import Business Data -->
+        <div class="cmpd_metabox_item">
+            <p class="cmpd_metabox_heading"><?php _e('Import Business Data', CMPD_SLUG_NAME); ?></p>
+            <?php
+            $get_businesses = CMProductDirectoryBackend::getBusinessesList();
+
+            $assigned = get_post_meta(get_the_ID(), 'cmpd_assign_business', true);
+            $assigned_business = !empty($assigned) ? get_post($assigned) : '';
+            $assigned_business = (!empty($assigned_business) && $assigned_business->post_status == 'publish' ) ? $assigned_business : '';
+            $input_disabled = $assigned != false && !empty($assigned_business) ? 'disabled' : '';
+
+            if (!empty($get_businesses)) {
+                if ($assigned != false && !empty($assigned_business)) {
+                    $assign_checked = !empty($assigned) ? 1 : 0;
+                    ?>
+                    <p>
+                        <label for="cmpd_assign_data" class="cmpd_metabox_label">Business assigned:</label>
+                        <input type="hidden" name="cmpd_assign_data" id="cmpd_assign_data" value="0" />
+                        <input type="hidden" name="cmpd_select_busienss" id="cmpd_select_busienss" value="<?php echo $assigned; ?>" />
+                        <input type="checkbox" name="cmpd_assign_data" id="cmpd_assign_data" <?php checked($assign_checked, '1', 1); ?> />
+
+                        <b><a href="<?php echo get_permalink( $assigned_business->ID ); ?>" title="<?php echo esc_attr($assigned_business->post_title); ?>"><?php echo esc_attr($assigned_business->post_title); ?></a></b> <a href="<?php echo admin_url(); ?>post.php?post=<?php echo $assigned_business->ID; ?>&amp;action=edit" title="Edit <?php echo esc_attr($assigned_business->post_title); ?>">(Edit)</a>.
+                    </p>
+                    <div class="clear"></div>
+                    <?php
+                } elseif (( $assigned != false && empty($assigned_business) ) || $assigned == false) {
+                    ?>
+                    <p>
+                        <label for"cmpd_select_busienss" class="cmpd_metabox_label">Select business to import its data:</label>
+                        <select name="cmpd_select_busienss" id="cmpd_select_busienss">
+                            <option value="">---</option>
+                            <?php
+                            foreach ($get_businesses as $business):
+                                echo '<option value="' . $business->ID . '">' . esc_html($business->post_title) . '</option>';
+                            endforeach;
+                            ?>
+                        </select><br />
+                        Businesses found: <?php echo sizeof($get_businesses); ?>
+                    </p>
+                    <div class="clear"></div>
+
+                    <p>
+                        <label for="cmpd_assign_data" class="cmpd_metabox_label">Assign business to product:</label>
+                        <input type="checkbox" name="cmpd_assign_data" id="cmpd_assign_data" />
+                    </p>
+                    <div class="clear"></div>
+                    <?php
+                }
+            }
+            else {
+                echo '<p>' . __('No Businesses found', CMPD_SLUG_NAME) . '</p>';
+            }
+            ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Business Address and Map -->
+    <div class="cmpd_metabox_item">
+        <p class="cmpd_metabox_heading"><?php _e('Business Address and Map', CMPD_SLUG_NAME); ?></p>
+
+        <?php
+        $virtual_address = CMProductDirectory::meta($post->ID, 'cmpd_virtual_address');
+
+        $default_address_setting = CMPD_Settings::getOption(CMPD_Settings::OPTION_PRODUCT_DEFAULT_ADDRESS);
+
+        $default_address_setting = $default_address_setting ? 1 : 0;
+        ?>
+
+        <!-- Virtual Address -->
+        <p>
+            <label for="cmpd_virtual_address" class="cmpd_metabox_label"><?php _e('Virtual address', CMPD_SLUG_NAME); ?>
+                <span class="cmpd_field_help" title="If checked all address fieds will be not displayed"> </span></label>
+            <input type="hidden" name="cmpd_virtual_address" value="0" <?php echo $input_disabled; ?>>
+            <input type="checkbox" name="cmpd_virtual_address" id="cmpd_virtual_address" class="cm_checkbox" value="1" <?php checked($virtual_address, '1', 1) ?> <?php echo $input_disabled; ?>>
+        </p>
+        <div class="clear"></div>
+
+
+        <?php
+        if ($virtual_address !== '1') {
+
+            $title = $post->title;
+
+            $address = CMProductDirectory::meta($post->ID, 'cmpd_address');
+            $address = empty($address) ? '' : ' ' . $address;
+
+            $cityTown = CMProductDirectory::meta($post->ID, 'cmpd_cityTown');
+            $cityTown = empty($cityTown) ? '' : ' ' . $cityTown;
+
+            $postalcode = CMProductDirectory::meta($post->ID, 'cmpd_postalcode');
+            $postalcode = empty($postalcode) ? '' : ' ' . $postalcode;
+
+            $country = CMProductDirectory::meta($post->ID, 'cmpd_country');
+            $country = empty($country) ? '' : ' ' . $country;
+
+
+            $location = $address . $cityTown . $postalcode . $country;
+
+            $translation_array = array(
+                'address' => $location,
+                'title' => $title
+            );
+            wp_enqueue_script('cmpd-functions');
+            wp_localize_script('cmpd-functions', 'cmpd_map_settings', $translation_array);
+            ?>
+            <!-- Company Name -->
+            <p>
+                <label class="cmpd_metabox_label" for="cmpd_company_name"><?php _e('Company name', CMPD_SLUG_NAME); ?></label>
+                <input type="text" name="cmpd_company_name" id="cmpd_company_name" placeholder="<?php echo esc_attr(empty($placeholder['form_company_name_placeholder']) ? '' : $placeholder['form_company_name_placeholder'] ); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_company_name')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?>/>
+            </p>
+            <div class="clear"></div>
+
+            <!-- Street -->
+            <p>
+                <label class="cmpd_metabox_label" for="address"><?php _e('Address', CMPD_SLUG_NAME); ?></label>
+                <input type="text" name="cmpd_address" id="address" placeholder="<?php echo esc_attr(empty($placeholder['form_address_placeholder']) ? '' : $placeholder['form_address_placeholder'] ); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_address')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?>/>
+            </p>
+            <div class="clear"></div>
+
+            <!-- City/Town -->
+            <p>
+                <label class="cmpd_metabox_label" for="address"><?php _e('City/Town', CMPD_SLUG_NAME); ?></label>
+                <input class="large-text ui-autocomplete-input cm_input" type="text" name="cmpd_cityTown" id="cityTown" placeholder="<?php echo esc_attr(empty($placeholder['form_cityTown_placeholder']) ? '' : $placeholder['form_cityTown_placeholder'] ); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_cityTown')); ?>" <?php echo $input_disabled; ?>/>
+            </p>
+            <div class="clear"></div>
+
+            <!-- Region -->
+            <p>
+                <label class="cmpd_metabox_label" for="region"><?php _e('Region', CMPD_SLUG_NAME); ?></label>
+                <input class="large-text ui-autocomplete-input cm_input" type="text" name="cmpd_region" id="region" placeholder="<?php echo esc_attr(empty($placeholder['form_region_placeholder']) ? '' : $placeholder['form_region_placeholder'] ); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_region')); ?>" <?php echo $input_disabled; ?> />
+            </p>
+            <div class="clear"></div>
+
+            <!-- County -->
+            <p>
+                <label class="cmpd_metabox_label" for="stateCounty"><?php _e('State/County', CMPD_SLUG_NAME); ?></label>
+                <input class="large-text ui-autocomplete-input cm_input" type="text" name="cmpd_stateCounty" id="address" placeholder="<?php echo esc_attr(empty($placeholder['form_stateCounty_placeholder']) ? '' : $placeholder['form_stateCounty_placeholder'] ); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_stateCounty')); ?>" <?php echo $input_disabled; ?> />
+            </p>
+            <div class="clear"></div>
+
+            <!-- Country -->
+            <p>
+                <label class="cmpd_metabox_label" for="country"><?php _e('Country', CMPD_SLUG_NAME); ?></label>
+                <?php
+                $countries = array("Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegowina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo", "Congo, the Democratic Republic of the", "Cook Islands", "Costa Rica", "Cote d'Ivoire", "Croatia (Hrvatska)", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "France Metropolitan", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard and Mc Donald Islands", "Holy See (Vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran (Islamic Republic of)", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, Democratic People's Republic of", "Korea, Republic of", "Kuwait", "Kyrgyzstan", "Lao, People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libyan Arab Jamahiriya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia, The Former Yugoslav Republic of", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Moldova, Republic of", "Monaco", "Mongolia", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russian Federation", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Seychelles", "Sierra Leone", "Singapore", "Slovakia (Slovak Republic)", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", "Spain", "Sri Lanka", "St. Helena", "St. Pierre and Miquelon", "Sudan", "Suriname", "Svalbard and Jan Mayen Islands", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan", "Tajikistan", "Tanzania, United Republic of", "Thailand", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands (British)", "Virgin Islands (U.S.)", "Wallis and Futuna Islands", "Western Sahara", "Yemen", "Yugoslavia", "Zambia", "Zimbabwe");
+                $current = CMProductDirectory::meta($post->ID, 'cmpd_country');
+                if (empty($current)) {
+                    $current = CMPD_Settings::getOption(CMPD_Settings::OPTION_PRODUCT_DEFAULT_COUNTRY);
+                    $current = $countries[$current];
+                }
+                ?>
+                <select class="large-text ui-autocomplete-input cm_input" type="text" name="cmpd_country" id="country" <?php echo $input_disabled; ?>>
+                    <?php
+                    foreach ($countries as $country) {
+                        echo '<option value="' . esc_attr($country) . '" ' . selected($current, $country, 0) . '>' . $country . '</option>';
+                    }
+                    ?>
+                </select>
+            </p>
+            <div class="clear"></div>
+
+            <!-- Postalcode -->
+            <p>
+                <label class="cmpd_metabox_label" for="postalcode"><?php _e('Postalcode', CMPD_SLUG_NAME); ?></label>
+                <input class="large-text ui-autocomplete-input cm_input" type="text" name="cmpd_postalcode" id="address" placeholder="<?php echo esc_attr(empty($placeholder['form_postalcode_placeholder']) ? '' : $placeholder['form_postalcode_placeholder'] ); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_postalcode')); ?>" <?php echo $input_disabled; ?>/>
+            </p>
+            <div class="clear"></div>
+
+        <?php } ?>
+
+        <?php do_action( 'cmpd_after_product_admin_form_address_section', $post ); ?>
+
+        <!-- Show Address -->
+        <p>
+            <label for="add_address_field" class="cmpd_metabox_label"><?php _e('Show address', CMPD_SLUG_NAME); ?>
+                <span class="cmpd_field_help" title="If not checked the address will not appear on product page"> </span></label>
+            <?php
+            $current = CMProductDirectory::meta($post->ID, 'cmpd_add_address_field');
+            $current = $current == '1' || $current == '0' ? $current : $default_address_setting;
+            ?>
+            <input type="hidden" name="cmpd_add_address_field" value="0" >
+            <input type="checkbox" name="cmpd_add_address_field" id="add_address_field" class="cm_checkbox" value="1" <?php checked($current, 1, 1); ?>/>
+        </p>
+        <?php echo!$default_address_setting ? $global_setting_msg : ''; ?>
+        <div class="clear"></div>
+
+        <!-- Add Google Map -->
+        <p>
+            <label for="add_google_map" class="cmpd_metabox_label"><?php _e('Add Google map', CMPD_SLUG_NAME); ?>
+                <span class="cmpd_field_help" title="If checked google map will be displayed on your product page"> </span></label>
+            <?php
+            $default_map_setting = CMPD_Settings::getOption(CMPD_Settings::OPTION_PRODUCT_DEFAULT_MAP);
+            $default_map_setting = (int) $default_map_setting;
+
+            $value_meta = CMProductDirectory::meta($post->ID, 'cmpd_add_google_map');
+            $value_meta = (int) $value_meta;
+
+            $current = isset($_GET['action']) && $_GET['action'] == 'edit' ? $value_meta : $default_map_setting;
+            ?>
+            <input type="hidden" name="cmpd_add_google_map" value="0" >
+            <input type="checkbox" name="cmpd_add_google_map" id="add_google_map" class="cm_checkbox" value="1" <?php checked($current, 1, 1); ?>/>
+        </p>
+        <?php echo!$default_map_setting ? $global_setting_msg : ''; ?>
+        <div class="clear"></div>
+
+        <?php if ( $current ) {
+            echo '<p><div class="cmpd_map" id="cmpd-map-canvas"></div></p><div class="clear"></div>';
+        } ?>
+    </div>
+    <div class="clear"></div>
+
+    <!-- Business Additional Information -->
+    <div class="cmpd_metabox_item">
+        <p class="cmpd_metabox_heading"><?php _e('Business Additional Information', CMPD_SLUG_NAME); ?></p>
+
+        <!-- Year Found -->
+        <p>
+            <label for="cmpd_year_founded" class="cmpd_metabox_label">Year found</label>
+            <select name="cmpd_year_founded" id="cmpd_year_founded" class="cm_input_short" <?php echo $input_disabled; ?>>
+                <?php
+                $default_setting_index = CMPD_Settings::getOption(CMPD_Settings::OPTION_PRODUCT_DEFAULT_YEAR);
+                $years = array('Not indicated', 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017);
+                $default_setting = $years[$default_setting_index];
+                $i = 1950;
+                $max = 2017;
+                $selected = CMProductDirectory::meta($post->ID, 'cmpd_year_founded');
+                $selected = ( $selected != 0 ) ? $selected : $default_setting;
+                ?>
+                <option value="Not indicated" <?php selected($selected, 'Not indicated', 0); ?>>Not indicated</option>
+                <?php
+                for ($i; $i <= $max; $i++) {
+                    echo '<option value="' . esc_attr($i) . '" ' . selected($selected, $i, 0) . '>' . $i . '</option>';
+                }
+                ?>
+            </select>
+        </p>
+        <div class="clear"></div>
+
+        <!-- Phone -->
+        <p>
+            <label for="cmpd_phone" class="cmpd_metabox_label"><?php _e('Phone', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_phone" name="cmpd_phone" placeholder="<?php echo empty($placeholder['form_phone_placeholder']) ? '(XXX)-XXX-XXXX or +1-(XXX)-XXX-XXXX' : esc_attr($placeholder['form_phone_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_phone')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- E-mail -->
+        <p>
+            <label for="cmpd_bemail" class="cmpd_metabox_label"><?php _e('E-mail', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_bemail" name="cmpd_bemail" placeholder="<?php echo empty($placeholder['form_bemail_contact_placeholder']) ? 'mail@company-domain.com' : esc_attr($placeholder['form_bemail_contact_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_bemail')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- Web URL -->
+        <p>
+            <label for="cmpd_web_url" class="cmpd_metabox_label"><?php _e('Web URL', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_web_url" name="cmpd_web_url" placeholder="<?php echo empty($placeholder['form_web_url_placeholder']) ? 'https://www.your_company_site.com' : esc_attr($placeholder['form_web_url_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_web_url')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- Facebook profile -->
+        <p>
+            <label for="cmpd_facebook_name" class="cmpd_metabox_label"><?php _e('Facebook profile', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_facebook_name" name="cmpd_facebook_name" placeholder="https://www.facebook.com/facebook_id" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_facebook_name')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- Twitter profile -->
+        <p>
+            <label for="cmpd_twitter_name" class="cmpd_metabox_label"><?php _e('Twitter profile', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_twitter_name" name="cmpd_twitter_name" placeholder="<?php echo empty($placeholder['form_twitter_name_placeholder']) ? 'https://www.twitter.com/twitter_id' : esc_attr($placeholder['form_twitter_name_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_twitter_name')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- Google+ profile -->
+        <p>
+            <label for="cmpd_google" class="cmpd_metabox_label"><?php _e('Google+ profile', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_google" name="cmpd_google" placeholder="<?php echo empty($placeholder['form_google_placeholder']) ? 'https://plus.google.com/google_id' : esc_attr($placeholder['form_google_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_google')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- Linkedin profile -->
+        <p>
+            <label for="cmpd_linkedin" class="cmpd_metabox_label"><?php _e('Linkedin profile', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_linkedin" name="cmpd_linkedin" placeholder="<?php echo empty($placeholder['form_linkedin_placeholder']) ? 'https://www.linkedin.com/company_id' : esc_attr($placeholder['form_linkedin_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_linkedin')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+
+        <!-- RSS -->
+        <p>
+            <label for="cmpd_rss_name" class="cmpd_metabox_label"><?php _e('RSS', CMPD_SLUG_NAME); ?></label>
+            <input type="text" id="cmpd_rss_name" name="cmpd_rss_name" placeholder="<?php echo empty($placeholder['form_rss_placeholder']) ? 'https://www.your_site.com/your_rss.xml' : esc_attr($placeholder['form_rss_placeholder']); ?>" value="<?php echo esc_attr(CMProductDirectory::meta($post->ID, 'cmpd_rss_name')); ?>" class="large-text ui-autocomplete-input cm_input" <?php echo $input_disabled; ?> />
+        </p>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+
+    <!-- Additional Fields -->
+    <?php
+    $add_fields = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_FIELDS);
+    if ($add_fields) {
+        ?>
+        <div class="cmpd_metabox_item">
+            <p class="cmpd_metabox_heading"><?php _e('Product Additional Information', CMPD_SLUG_NAME); ?></p>
+
+            <!-- Additional Fields -->
+
+            <?php
+            for ($index = 1; $index < 5; $index++) {
+                $label = CMPD_Settings::getOption(CMPD_Settings::OPTION_ADD_FIELDS_LABEL_BASE . $index);
+                $fieldName = 'cmpd_add_field' . $index;
+                $metakey = 'cmpd_add_field' . $index;
+                $fieldValue = esc_attr(CMProductDirectory::meta($post->ID, $metakey));
+                if (!empty($label)) {
+                    ?>
+                    <p>
+                        <label for="cmpd_add_field<?php echo esc_attr($index); ?>" class="cmpd_metabox_label"><?php echo esc_html($label); ?></label>
+                        <input type="text" name="<?php echo esc_attr($fieldName); ?>" id="<?php echo esc_attr($fieldName); ?>" value="<?php echo esc_attr($fieldValue); ?>" class="large-text ui-autocomplete-input cm_input">
+
+                    </p>
+                    <div class="clear"></div>
+                    <?php
+                }
+            }
+            ?>
+        </div>
+        <div class="clear"></div>
+<?php } ?>
+
+</div>
+<div style="height: 30px;clear:both"></div>

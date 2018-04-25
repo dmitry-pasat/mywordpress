@@ -1,0 +1,76 @@
+<p class="clear"></p>
+<br/>
+<?php if (empty($showCredentialsForm)) : ?>
+	<div>
+		<h3>Backup Product Directory to File</h3>
+
+		<?php if (!empty($directoryShowBackupDownloadLink)) : ?>
+			<a href="<?php echo esc_attr($directoryShowBackupDownloadLink); ?>" class="button">Download Backup</a>
+			<p>
+				<strong>URL to the backup file:</strong>
+				<input type="text" readonly="readonly" size="90" value="<?php echo esc_attr($directoryShowBackupDownloadLink); ?>" />
+			</p>
+		<?php endif; ?>
+
+		<form method="post">
+			<?php wp_nonce_field('cmpd_directory_do_backup'); ?>
+			<input type="submit" value="Backup to JSON" name="cmpd_directory_doBackup" class="button button-primary"/>
+		</form>
+	</div>
+<?php endif; ?>
+
+<br/><br/>
+<div>
+	<h3>Export Product Directory Terms</h3>
+	<form method="post">
+		<input type="submit" value="Export to JSON" name="cmpd_directory_doExport" class="button button-primary"/>
+	</form>
+
+</div>
+<br/><br/>
+
+<div>
+	<h3>Import Product Directory from File</h3>
+
+	<?php if (isset($_GET['cmpd_msg']) && $_GET['cmpd_msg'] == 'imported'): ?>
+		<div id="message" class="updated below-h2">
+			File <?php echo ($_GET['cmpd_productnumber'] == 0) ? 'import failed' : 'succesfully imported'; ?> (<?php echo esc_html($_GET['cmpd_productnumber']); ?> product read from file)</div>
+	<?php endif; ?>
+
+	<p>
+		If the product already exists in the database, the product will be duplicated.
+	</p>
+
+	<form method="post" enctype="multipart/form-data">
+		<input type="file" name="cmpd_directory_import_file" />
+		<input type="submit" value="Import from JSON" name="cmpd_directory_doImport" class="button button-primary"/>
+	</form><br />
+
+	<h3>Import CSV File</h3>
+
+	<div>
+		<strong>Important!!</strong>
+		<ul style="list-style: circle; margin-left: 2em">
+			<li>File should be UTF-8 encoded</li>
+			<li>If you use MS Excel, please remember that by default it can't save proper CSV format (comma-delimited) - see <a href="http://support.microsoft.com/kb/291296" target="_blank" rel="nofollow">Microsoft Knowledge Base Article</a></li>
+			<li>All the fields which can contain commas, must be enclosed in quotes! (to be 100% safe enclose each field in quotes)</li>
+			<li>The only mandatory field is Title</li>
+		</ul>
+	</div>
+
+	<form method="post" enctype="multipart/form-data">
+		<input type="file" name="cmpd_directory_import_csv_file" />
+		<input type="submit" value="Import from CSV" name="cmpd_directory_csv_doImport" class="button button-primary" />
+	</form><br />
+	<style>
+	.cmpd-import-fields-container { padding: 1em; border: 1px solid #cecece; background: #fff; display: block; }
+.cmpd-import-field-mark { padding:2px; margin: 0.5em 2px; background: #eeffee; border: 1px solid #cecece; border-radius: 2px; color: #333; line-height: 2em; }
+</style>
+	Format example:<br />
+	<p class="cmpd-import-fields-container">
+	<span class="cmpd-import-field-mark">post_title</span>, <span class="cmpd-import-field-mark">post_content</span>, <span class="cmpd-import-field-mark">post_category/0</span>, <span class="cmpd-import-field-mark">post_category/1</span>, <span class="cmpd-import-field-mark">post_category/2</span>, <span class="cmpd-import-field-mark">post_category/3</span>, <span class="cmpd-import-field-mark">post_category/4</span>, <span class="cmpd-import-field-mark">post_category/5</span>, <span class="cmpd-import-field-mark">post_category/6</span>, <span class="cmpd-import-field-mark">post_category/7</span>, <span class="cmpd-import-field-mark">post_category/8</span>, <span class="cmpd-import-field-mark">post_category/9</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/0</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/1</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/2</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/3</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/4</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/5</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/6</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/7</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/8</span>, <span class="cmpd-import-field-mark">cmpd_pricing_model/9</span>, <span class="cmpd-import-field-mark">cmpd_language_support/0</span>, <span class="cmpd-import-field-mark">cmpd_language_support/1</span>, <span class="cmpd-import-field-mark">cmpd_language_support/2</span>, <span class="cmpd-import-field-mark">cmpd_language_support/3</span>, <span class="cmpd-import-field-mark">cmpd_language_support/4</span>, <span class="cmpd-import-field-mark">cmpd_language_support/5</span>, <span class="cmpd-import-field-mark">cmpd_language_support/6</span>, <span class="cmpd-import-field-mark">cmpd_language_support/7</span>, <span class="cmpd-import-field-mark">cmpd_language_support/8</span>, <span class="cmpd-import-field-mark">cmpd_language_support/9</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/0</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/1</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/2</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/3</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/4</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/5</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/6</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/7</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/8</span>, <span class="cmpd-import-field-mark">cmpd_target_audience/9</span>, <span class="cmpd-import-field-mark">post_tags/0</span>, <span class="cmpd-import-field-mark">post_tags/1</span>, <span class="cmpd-import-field-mark">post_tags/2</span>, <span class="cmpd-import-field-mark">post_tags/3</span>, <span class="cmpd-import-field-mark">post_tags/4</span>, <span class="cmpd-import-field-mark">post_tags/5</span>, <span class="cmpd-import-field-mark">post_tags/6</span>, <span class="cmpd-import-field-mark">post_tags/7</span>, <span class="cmpd-import-field-mark">post_tags/8</span>, <span class="cmpd-import-field-mark">post_tags/9</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_company_name</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_product_gallery_id</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_product_pitch</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_promoted</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_virtual_address</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_address</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_cityTown</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_region</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_stateCounty</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_country</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_postalcode</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_address_field</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_google_map</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_year_founded</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_phone</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_bemail</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_facebook_name</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_twitter_name</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_google</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_web_url</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_rss_name</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_rating</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_link1</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_link2</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_link3</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_link4</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_field1</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_field2</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_field3</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_add_field4</span>, <span class="cmpd-import-field-mark">post_meta/cmpd_product_gallery</span> 
+	</p>
+	<p>
+		Download the example file prepared by CreativeMinds: <a href="<?php echo CMPD_PLUGIN_URL ?>backend/assets/cmpd_import_csv_sample.csv">cmnb_import_csv_sample.csv</a>
+	</p>
+</div>

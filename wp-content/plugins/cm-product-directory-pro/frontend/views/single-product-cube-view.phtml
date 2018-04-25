@@ -1,0 +1,48 @@
+<?php
+	$title			 = $product->post_title;
+	$permalink		 = esc_attr( get_permalink( $product->ID ) );
+	$logo_url_arr	 = CMProductDirectoryProductPage::getProductGallery( $product->ID );
+	$target		= CMPD_Settings::getOption( CMPD_Settings::OPTION_BUTTONS_TARGET_BLANK );
+	$target		= $target ? 'target="_blank"' : '';
+
+$viewColumns = CMPD_Settings::getOption( CMPD_Settings::CMPD_OPTION_APPEARANCE_PRODUCT_COLUMNS );
+switch ( $viewColumns ) {
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+		$logo_url			= !empty( $logo_url_arr ) ? $logo_url_arr[ 0 ][ 'cmpd_image_big' ][ 0 ] : '';
+		$default_logo_url	= CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-300-300.png';
+		break;
+	case 5:
+	case 6:
+		$logo_url			= !empty( $logo_url_arr ) ? $logo_url_arr[ 0 ][ 'cmpd_image_medium' ][ 0 ] : '';
+		$default_logo_url	= CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-200-200.png';
+		break;
+	default:
+		$logo_url			= !empty( $logo_url_arr ) ? $logo_url_arr[ 0 ][ 'cmpd_image_small' ][ 0 ] : '';
+		$default_logo_url	= CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-100-100.png';
+		break;
+}
+?>
+
+<div class="cmpd_cube_style">
+	<div class="cmpd_cube_item">
+		<a href="<?php echo $permalink; ?>" title="<?php echo $title; ?>" <?php echo $target; ?> >
+			<div class="cmpd_cube_title_label">
+				<h5 class="cmpd_cube_title_label_header"><?php echo $title; ?></h5>
+			</div>
+
+			<?php if ( !empty( $logo_url ) ) : ?>
+				<div class="cmpd_product_logo">
+					<img src="<?php echo $logo_url; ?>" alt="<?php echo esc_attr( $title ); ?>" />
+				</div>
+			<?php else: ?>
+				<div class="cmpd_product_logo">
+					<img src="<?php echo $default_logo_url; ?>" alt="<?php echo esc_attr( $title ); ?>" />
+				</div>
+			<?php endif; ?>
+			<?php echo CMProductDirectoryFrontend::outputEditlink( $product, $atts ); ?>
+		</a>
+	</div>
+</div>

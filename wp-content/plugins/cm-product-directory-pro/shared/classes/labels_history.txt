@@ -1,0 +1,13 @@
+cityTown	City/Town 	Label for "City/Town"	General
+stateCounty	State/County 	Label for "State/County"	General
+postalcode	Postalcode 	Label for "Postalcode"	General
+region	Region 	Label for "Region"	General
+country	Country 	Label for "Country"	General
+
+
+
+
+to do:
+
+mapka w dodatku;
+css wyrównanie napisów w filtrowaniu (główny plugin)

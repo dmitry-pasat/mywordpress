@@ -1,0 +1,12 @@
+<?php if ($thread->isResolved() AND CMA_Settings::getOption(CMA_Settings::OPTION_ADD_RESOLVED_QUESTION_TITLE_PREFIX)): ?>
+	<div class="cma-thread-resolved-flag"><?php echo CMA_Labels::getLocalized('RESOLVED'); ?></div>
+<?php elseif( $thread->canResolve() ): ?>
+	<!--googleoff: all-->
+		<form action="<?php echo esc_attr($thread->getPermalink()) ?>" method="post" class="cma-thread-resolve-form"  onsubmit="return confirm(<?php
+			echo esc_attr(json_encode(CMA::__('Do you really want to resolve this thread?'))); ?>)">
+			<input type="hidden" name="cma-action" value="resolve" />
+			<input type="hidden" name="nonce" value="<?php echo esc_attr(wp_create_nonce('cma_resolve')); ?>"/>
+			<button type="submit"><?php echo CMA_Labels::getLocalized('mark_as_resolved'); ?></button>
+		</form>
+	<!--googleon: all-->
+<?php endif; ?>

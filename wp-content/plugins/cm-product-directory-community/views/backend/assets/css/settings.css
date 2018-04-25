@@ -1,0 +1,62 @@
+.cmpdc_one_checkbox{
+    width: 40px !important;
+}
+
+div#tab_comunity-labels table.settting_label_table{
+    width: 100%;
+}
+div#tab_comunity-labels table.settting_label_table th.col_first{
+    text-align: left;
+    padding: 10px 10px 10px 10px;
+    width: 25%;
+}
+div#tab_comunity-labels table.settting_label_table td.col_first{
+    text-align: right;
+    width: 25%;
+}
+div#tab_comunity-labels table.settting_label_table th.col_second {
+    text-align: left;
+    padding: 10px 10px 10px 10px;
+    width: 25%;
+}
+div#tab_comunity-labels table.settting_label_table td.col_second{
+    text-align: left;
+    width: 25%;
+}
+div#tab_comunity-labels table.settting_label_table th.col_third{
+    text-align: left;
+    padding: 10px 10px 10px 10px;
+    width: 5%;
+}
+div#tab_comunity-labels table.settting_label_table td.col_third{
+    text-align: center;
+    width: 5%;
+}
+div#tab_comunity-labels table.settting_label_table th.col_fourth{
+    text-align: left;
+    padding: 10px 10px 10px 10px;
+    width: 45%;
+}
+div#tab_comunity-labels table.settting_label_table td.col_fourth{
+    text-align: left;
+    width: 45%;
+}
+.cm_input_contact_email{
+    margin-right: 38px;
+    float: left;
+    width: 300px !important;
+
+
+}
+.alert-success{
+    border: 2px solid #00cc00;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+}
+.alert-warning{
+    border: 2px solid red;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+}

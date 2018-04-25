@@ -1,0 +1,84 @@
+<h3>Custom CSS</h3>
+<p>Place your styles here to override any CSS rule of the plugin.</p>
+<!--<textarea name="custom_css" class="cmpd-custom-css" placeholder="<?php echo CMProductDirectory::__('Custom CSS'); ?>"><?php echo isset($customCSS) ? esc_html($customCSS) : ''; ?></textarea>-->
+
+<?php
+$customCSSFieldName = CMPD_Settings::OPTION_CUSTOM_CSS;
+echo $settingsView->renderOptionControls($customCSSFieldName);
+?>
+
+<h3>Typical style modifications</h3>
+<p>Click on the red value to change it. Press "Add" button to add custom CSS to the textarea. You can change it after adding and update.</p>
+
+<div id="custom-css-editor">
+
+    <h4>Change background for common product (only for Product Directory and Tiles view)</h4>
+    <pre><code class="no-highlight"> .cmpd-directory, .cmpd-tiles {background: <span>#fff !important</span>}</code></pre>
+
+    <h4>Change title for the common product </h4>
+    <pre><code class="no-highlight"> .cmpd-directory-title, .cmpd-product-title .cmpd-link-title{color:<span>#141412 !important</span>;font-size:<span>13px !important</span>}</code></pre>
+
+    <h4>Change "Product Info Link: " button styles (only in Tiles view)</h4>
+    <pre><code class="no-highlight">.cmpdiv.cmpd-module-buttons-firstrow .cmpd-button.details{color: <span>#888</span>;background-color: <span>#E4E03B</span>}</code></pre>
+
+    <h4>Change the styles of the Busines Info Box links(facebook,twitter...) and Phone.</h4>
+    <pre><code class="no-highlight">.cmpd-info-box-link, .cmpd-info-box-phone{color: <span>#888</span>;}</code></pre>
+   
+    <h4>Change the styles of the hover Busines Indo Box links(facebook,twitter...) and Phone.</h4>
+    <pre><code class="no-highlight">.cmpd-info-box-link:hover, .cmpd-info-box-phone:hover{color: <span>#888</span>;}</code></pre>
+
+   
+    </div>
+
+<script type="text/javascript">
+    (function ($) {
+        $(document).ready(function ($) {
+            $('#custom-css-editor code').append('<button class="cmpd-button">Add</button>');
+            $('#custom-css-editor code span').click(function () {
+                var obj = $(this);
+                if (obj.find('input').length)
+                    return;
+                var value = obj.text();
+                var input = document.createElement('input');
+                input.setAttribute('value', value);
+                input.style.width = value.length + "em";
+                obj.html(input);
+                input.select();
+                $(input).blur(function () {
+                    obj.text($(this).val().length > 0 ? $(this).val() : value);
+                });
+            });
+
+            $('#custom-css-editor code button').click(function () {
+                var code = this.parentNode;
+                code.removeChild(this);
+                var textarea = $('textarea[name=<?php echo $customCSSFieldName; ?>]');
+                textarea.val(textarea.val() + "\n" + $(code).text());
+                code.appendChild(this);
+                return false;
+            });
+
+            $('#custom-css-editor cmpd-button').click(function (e) {
+                e.preventDefault();
+                return false;
+            });
+            $('#custom-css-editor a').click(function (e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+    })(jQuery);
+</script>
+
+<style type="text/css">
+    textarea[name="cmpd_custom_css"] {
+        min-width: 300px;
+        max-width: 840px;
+        width: 70%;
+        height: 200px;
+    }
+    #custom-css-editor {margin-left: 20px;}
+    #custom-css-editor code {padding: 10px; margin-left: 20px; display: block; width: 60em; background: #f0f0f0;}
+    #custom-css-editor cmpd-button {float: right; margin-top: -3px;}
+    #custom-css-editor span {color: red; cursor: pointer;}
+</style>

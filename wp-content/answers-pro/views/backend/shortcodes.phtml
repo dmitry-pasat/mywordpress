@@ -1,0 +1,199 @@
+<?php
+
+?>
+
+<p><strong><?php echo CMA_Settings::__('Notice: shortcodes are case-sensitive.'); ?></strong></p>
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-questions]</h4>
+		<span>Shows the questions table</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<h5>Filtering parameters:</h5>
+		<ul>
+			<li><strong>author</strong> - <?php echo CMA_Settings::__('ID of the question author (default: empty) [Question only]'); ?></li>
+			<li><strong>limit</strong> - <?php echo CMA_Settings::__('number of questions per page to display, default is 5'); ?></li>
+			<li><strong>contributor</strong> - <?php echo CMA_Settings::__('ID of the question author or user who has answered for the question (default: empty) [Question only]'); ?></li>
+		    <li><strong>cat</strong> - <?php echo CMA_Settings::__('slug of category (categories separate by commas) (default: empty)'); ?></li>
+		    <li><strong>answered</strong> - <?php echo CMA_Settings::__('show only unanswered (0) or only answered (1) questions. Default: empty (all questions).'); ?></li>
+		    <li><strong>resolved</strong> - <?php echo CMA_Settings::__('show only unresolved (0) or only resolved (1) questions. Default: empty (all questions).'); ?></li>
+		    <li><strong>subtree</strong> - <?php echo CMA_Settings::__('limit the categories filter options only to subcategories of the current category given by the cat parameter (default: 0)'); ?></li>
+		    <li><strong>displaycategories</strong> - <?php echo CMA_Settings::__('display category name next to the question (default: 0)'); ?></li>
+		    <li><strong>favorite</strong> - <?php echo CMA_Settings::__('if set to 1 then showing only questions marked as favorite for the current user. Default: 0 (showing all questions).'); ?></li>
+		</ul>
+		<h5>View parameters:</h5>
+		<ul>
+			<li><strong>ajax</strong> - <?php echo CMA_Settings::__('enable or disable AJAX support (default: 1)'); ?></li>
+			<li><strong>sort</strong> - <?php echo CMA_Settings::__('one of following: newest, hottest, views, votes (default: newest)'); ?></li>
+			<li><strong>form</strong> - <?php echo CMA_Settings::__('add "question form" (default: 0)'); ?></li>
+			<li><strong>formontop</strong> - <?php echo CMA_Settings::__('display the question form above the questions table (default: 0)'); ?></li>
+		    <li><strong>dateposted</strong> - <?php echo CMA_Settings::__('display the thread posted date (default: 0)'); ?></li>
+		    <li><strong>showcontent</strong> - <?php echo CMA_Settings::__('display the question\'s content below the title when showcontent=1 or fragment when showcontent=fragment (default: 0)'); ?></li>
+		    <li><strong>search</strong> - <?php echo CMA_Settings::__('add "search form" above list (default: 1)'); ?></li>
+		    <li><strong>pagination</strong> - <?php echo CMA_Settings::__('show pagination (default: 1)'); ?></li>
+		    <li><strong>hidequestions</strong> - <?php echo CMA_Settings::__('hides the question list (default: 0)'); ?></li>
+		    <li><strong>votes</strong> - <?php echo CMA_Settings::__('show the number of votes (default: 1)'); ?></li>
+		    <li><strong>views</strong> - <?php echo CMA_Settings::__('show the number of views (default: 1)'); ?></li>
+		    <li><strong>answers</strong> - <?php echo CMA_Settings::__('show the number of answers (default: 1)'); ?></li>
+		    <li><strong>updated</strong> - <?php echo CMA_Settings::__('show the information about question\'s last update (default: 1)'); ?></li>
+		    <li><strong>authorinfo</strong> - <?php echo CMA_Settings::__('show the infformation about question\'s author (default: 1)'); ?></li>
+		    <li><strong>statusinfo</strong> - <?php echo CMA_Settings::__('show the information about question\'s status (default: 0)'); ?></li>
+		    <li><strong>tags</strong> - <?php echo CMA_Settings::__('show questions\' tags (default: 1)'); ?></li>
+		    <li><strong>navbar</strong> - <?php echo CMA_Settings::__('show the full navigation bar (default: 0)'); ?></li>
+		    <li><strong>sortbar</strong> - <?php echo CMA_Settings::__('show the sorting bar (default: 0)'); ?></li>
+		    <li><strong>scrollaftersearch</strong> - <?php echo CMA_Settings::__('scroll to the top of the container after loaded new subpage (default: 1)'); ?></li>
+		</ul>
+		<h5>Example</h5>
+		<p><kbd>[cma-questions limit="10" author="123" sort="hottest" form="1"]</kbd></p>
+	</div>
+</article>
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-index]</h4>
+		<span>Shows the questions table</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<p>The shortcode works the same as the [cma-questions] but have different default values that come from the <em>Index page</em> settings.</p>
+	</div>
+</article>
+
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-my-questions]</h4>
+		<span>Shows current user's questions</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<p>Displays current user's questions in the same way it's displayed on the contributor's page.
+		It supports the same parameters as the [cma-questions] shortcode.</p>
+	</div>
+</article>
+
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-favorite-questions]</h4>
+		<span>Shows the current user's favorite questions</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<p>Displays the questions that has been marked by the current user as favorite.
+		It supports the same parameters as the [cma-questions] shortcode.</p>
+	</div>
+</article>
+
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-answers]</h4>
+		<span>Shows the answers table</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<h5>Filtering parameters:</h5>
+		<ul>
+			<li><strong>author</strong> - <?php echo CMA_Settings::__('ID of the answer author (default: empty)'); ?></li>
+			<li><strong>limit</strong> - <?php echo CMA_Settings::__('number of results per page to display, default is 5'); ?></li>
+		</ul>
+		<h5>View parameters:</h5>
+		<ul>
+			<li><strong>ajax</strong> - <?php echo CMA_Settings::__('enable or disable AJAX support (default: 1)'); ?></li>
+		</ul>
+	</div>
+</article>
+
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-my-answers]</h4>
+		<span>Shows current user's answers</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<p>Displays current user's answers in the same way it's displayed on the contributor's page.</p>
+		<h5>Supported parameters:</h5>
+		<ul>
+			<li><strong>ajax</strong> - enable AJAX support so clicking on the question won't reload the current page.</li>
+		</ul>
+	</div>
+</article>
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-categories]</h4>
+		<span>Shows the categories table</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<h5>Example</h5>
+		<p><kbd>[cma-categories questions=1 answers=1 follow=1 header=1 unanswered=1 parent=category experts=0]</kbd></p>
+	</div>
+</article>
+
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-categories-list]</h4>
+		<span>Shows the categories list</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<h5>Example</h5>
+		<p><kbd>[cma-categories-list]</kbd></p>
+	</div>
+</article>		
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-followed]</h4>
+		<span>Shows followed threads and categories</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<p><?php echo CMA_Settings::__('Displays current user\'s followed threads and categories.'); ?></p>
+	</div>
+</article>
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-question-form]</h4>
+		<span>Shows the question form</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<h5>Parameters:</h5>
+		<ul>
+			<li><strong>cat</strong> - (optional) category's slug or term ID that the question will be posted to.</li>
+			<li><strong>title</strong> - show title or not. Values: 0 or 1, default is 0.</li>
+			<li><strong>backlink</strong> - show the back link or not. Values: 0 or 1, default is 1.</li>
+		</ul>
+	</div>
+</article>
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-board]</h4>
+		<span>Shows questions divided by categories</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<h5>Parameters:</h5>
+		<ul>
+			<li><strong>showquestions</strong> - whether to show the questions. Values are 0 or 1, default is 1.</li>
+			<li><strong>questionslimit</strong> - limit number of questions.</li>
+		</ul>
+	</div>
+</article>
+
+<article class="cma-shortcode-desc">
+	<header>
+		<h4>[cma-get-param-author]</h4>
+		<span>Returns "author" parameter from URL</span>
+	</header>
+	<div class="cma-shortcode-desc-inner">
+		<p>Returns the value of the "author" parameter from the URL address, e.g. if the URL is
+			<kbd>/custom-user-page/?author=<strong>123</strong></kbd> the shortcode will return <kbd>123</kbd>.
+			May be used combined with the <kbd>[cma-questions]</kbd>
+			or <kbd>[cma-answers]</kbd> shortcodes in order to create a custom contributor's page.</p>
+		<h5>Example</h5>
+		<p><kbd>[cma-questions author="[cma-get-param-author]"]</kbd></p>
+		<p><kbd>[cma-answers author="[cma-get-param-author]"]</kbd></p>
+	</div>
+</article>
+
+<p><?php echo CMA_Settings::__('To attach a YouTube or Vimeo clip to the thread just put the URL in brackets:'); ?> [https://youtu.be/Zkdf3kaso]</p>
+

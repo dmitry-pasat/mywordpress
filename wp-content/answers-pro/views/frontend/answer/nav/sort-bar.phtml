@@ -1,0 +1,31 @@
+<?php
+
+$currentSort = (!empty($_GET['sort']) AND ctype_alnum($_GET['sort'])) ? $_GET['sort'] : CMA_Settings::getOption(CMA_Settings::OPTION_INDEX_ORDER_BY);
+if (!ctype_alnum($currentSort)) $currentSort = CMA_Settings::getOption(CMA_Settings::OPTION_INDEX_ORDER_BY);
+$urlArgs = array();
+if( isset($_GET["cmatag"]) ) $urlArgs['cmatag'] = $_GET["cmatag"];
+
+$visibleSortingOptions = CMA_Settings::getOption(CMA_Settings::OPTION_INDEX_SORTING_OPTIONS);
+
+$displaySortingLink = function($orderby) use ($currentSort, $permalink, $urlArgs) {
+	$out = '<li class="cma-thread-sort-' . $orderby .'';
+	if ( $currentSort == $orderby ) $out .= ' cma-current-sort';
+	$out .= '">';
+	$url = add_query_arg(urlencode_deep(array_merge(array('sort' => $orderby), $urlArgs)), $permalink);
+	$label = CMA_Labels::getLocalized('orderby_' . $orderby);
+	$out .= sprintf('<a href="%s">%s</a>', esc_attr($url), $label);
+	$out .= '</li>';
+	return $out;
+};
+
+?>
+
+<?php if ( CMA_Settings::getOption(CMA_Settings::OPTION_SHOW_INDEX_ORDER) ) : ?>
+	<ul class="cma-thread-orderby">
+		<?php foreach ($visibleSortingOptions as $orderby): ?>
+			<?php echo $displaySortingLink($orderby); ?>
+		<?php endforeach; ?>
+	    <?php do_action('cma_question_sort_bar'); ?>
+	</ul>
+<?php endif; ?>
+

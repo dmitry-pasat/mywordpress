@@ -1,0 +1,16 @@
+/* Metabox table - manage ratings */
+.manage_ratings_table { width: 100%; display: block; margin: auto; }
+.manage_ratings_table tr:first-child { background: #f2f2f2; padding: 1em; }
+.manage_ratings_table tr:nth-child(odd) { background: #f2f2f2; }
+.manage_ratings_table tr:last-child { background: none; }
+
+.manage_ratings_table th { font-size: 1.25em; font-weight: bold; }
+.manage_ratings_table td { padding: 0.25em; margin:0; width: auto; text-align: center; }
+
+
+
+.cmsr_26_cell { width: calc(80%/3); }
+.cmsr_10_cell { width: calc(100%/20); }
+
+
+.cmsr_note { font-weight: bold; font-size: 1.2em; margin: 0; padding: 0; text-indent: 0;}

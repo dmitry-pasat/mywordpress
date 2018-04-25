@@ -1,0 +1,155 @@
+<?php
+$color						 = CMPD_Settings::getOption( CMPD_Settings::OPTION_INFO_WIDGET );
+$address_color				 = CMPD_Settings::getOption( CMPD_Settings::OPTION_ADDRESS_WIDGET );
+$purchase_button_color		 = CMPD_Settings::getOption( CMPD_Settings::OPTION_PURCHASE_BUTTON_COLOR );
+$purchase_button_hover_color = CMPD_Settings::getOption( CMPD_Settings::OPTION_PURCHASE_BUTTON_HOVER_COLOR );
+
+$product_text_color			 = CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_BOX_TEXT_COLOR );
+$product_link_color			 = CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_BOX_LINK_COLOR );
+$product_link_hover_color	 = CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_BOX_LINK_HOVER_COLOR );
+$company_text_color			 = CMPD_Settings::getOption( CMPD_Settings::OPTION_COMPANY_BOX_TEXT_COLOR );
+$company_link_color			 = CMPD_Settings::getOption( CMPD_Settings::OPTION_COMPANY_BOX_LINK_COLOR );
+$company_link_hover_color	 = CMPD_Settings::getOption( CMPD_Settings::OPTION_COMPANY_BOX_LINK_HOVER_COLOR );
+
+if ( !empty( $color ) ):
+	?>
+	<style>
+		#product-box{
+			background: <?php echo esc_html( $color ); ?>;
+		}
+		#company-box{
+			background: <?php echo esc_html( $address_color ); ?>;
+		}
+	</style>
+<?php endif;
+?>
+
+<style>
+    .cmpd_purchase_link { background: <?php echo!empty( $purchase_button_color ) ? $purchase_button_color : '#27ae60'; ?>; }
+    .cmpd_purchase_link:hover,
+    .cmpd_purchase_link:focus { background: <?php echo!empty( $purchase_button_hover_color ) ? $purchase_button_hover_color : '#2ecc71'; ?>; }
+
+    div.cmpd-info-box#product-box,
+    div.cmpd-info-box#product-box p,
+    div.cmpd-info-box#product-box li { color: <?php echo $product_text_color; ?> }
+    div.cmpd-info-box#product-box a  { color: <?php echo $product_link_color; ?> }
+    div.cmpd-info-box#product-box a:hover { color: <?php echo $product_link_hover_color; ?> }
+
+    div.cmpd-info-box#company-box,
+    div.cmpd-info-box#company-box p,
+    div.cmpd-info-box#company-box li { color: <?php echo $company_text_color; ?> }
+    div.cmpd-info-box#company-box a  { color: <?php echo $company_link_color; ?> }
+    div.cmpd-info-box#company-box a:hover { color: <?php echo $company_link_hover_color; ?> }
+</style>
+
+<?php
+$color = CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_CONTAINER );
+
+if ( !empty( $color ) ):
+	?>
+	<style>
+		.product-container{
+			background: <?php echo esc_html( $color ); ?>;
+		}
+	</style>
+<?php endif; ?>
+<div class="product-container">
+    [cmpd_back_to_index_link]
+    <h1 class="product-title text-center">[cmpd_post_title]</h1>
+    <div class="cmpd_content_block">
+        <aside class="product-aside">
+
+			<?php
+			/**
+			 * Star Rating
+			 */
+			$rating_enabled	 = get_option( 'cmpd_rating_enabled' );
+			$rating_on_top	 = get_option( 'cmpd_rating_display_on_top' );
+
+			if ( $rating_enabled && $rating_on_top ) {
+				echo do_shortcode( '[cmpd_cm_star_rating]' );
+			}
+			?>
+            [cmpd_image]
+			[cmpd_additions]
+
+            <!-- Info box -->
+			<?php
+			$info_box = '';
+			$info_box .= do_shortcode( '[cmpd_purchase_link]' );
+			$info_box .= do_shortcode( '[cmpd_product_cost]' );
+			$info_box .= do_shortcode( '[cmpd_demo_link]' );
+			$info_box .= do_shortcode( '[cmpd_product_page]' );
+			$info_box .= do_shortcode( '[cmpd_display_categories]' );
+			$info_box .= do_shortcode( '[cmpd_display_pricing_models]' );
+			$info_box .= do_shortcode( '[cmpd_display_language_supports]' );
+			$info_box .= do_shortcode( '[cmpd_display_target_audiences]' );
+			$info_box .= do_shortcode( '[cmpd_display_tags]' );
+			$info_box .= do_shortcode( '[cmpd_add_links]' );
+
+
+			if ( !empty( $info_box ) ):
+				?>
+				<div class="cmpd-info-box" id="product-box">
+					<?php echo!empty( $info_box ) ? '<ul class="list-unstyled">' . $info_box . '</ul>' : ''; ?>
+					<!-- <?php echo!empty( $info_box ) ? $info_box : ''; ?> -->
+				</div>
+			<?php endif; ?>
+
+            [cmpd_product_video]
+
+			<?php
+			$company_box_ul = '';
+			$company_box_ul .= do_shortcode( '[cmpd_company_name]' );
+			$company_box_ul .= do_shortcode( '[cmpd_location]' );
+			$company_box_ul .= do_shortcode( '[cmpd_year_founded]' );
+			$company_box_ul .= do_shortcode( '[cmpd_phone]' );
+			$company_box_ul .= do_shortcode( '[cmpd_email]' );
+			$company_box_ul .= do_shortcode( '[cmpd_web_url]' );
+			$company_box_ul .= do_shortcode( '[cmpd_facebook]' );
+			$company_box_ul .= do_shortcode( '[cmpd_twitter]' );
+			$company_box_ul .= do_shortcode( '[cmpd_linkedin]' );
+			$company_box_ul .= do_shortcode( '[cmpd_google_plus]' );
+			$company_box_ul .= do_shortcode( '[cmpd_rss]' );
+			$company_box_ul .= do_shortcode( '[cmpd_alexa]' );
+
+			$company_box = do_shortcode( '[cmpd_add_fields position="info_box"]' );
+
+			if ( !empty( $company_box ) || !empty( $company_box_ul ) ):
+				?>
+				<div class="cmpd-info-box" id="company-box">
+					<?php echo!empty( $company_box_ul ) ? '<ul class="list-unstyled">' . $company_box_ul . '</ul>' : ''; ?>
+					<?php echo!empty( $company_box ) ? $company_box : ''; ?>
+				</div>
+			<?php endif; ?>
+
+            [cmpd_add_fields position="below_content"]
+            [cmpd_googla_map]
+            [cmpd_display_dates]
+			<?php
+			/**
+			 * Star Rating
+			 */
+			if ( $rating_enabled && !$rating_on_top ) {
+				echo do_shortcode( '[cmpd_cm_star_rating]' );
+			}
+			?>
+        </aside>
+
+        <div class="product-info">
+            <div class="product-info-text">
+
+                [cmpd_product_pitch]
+                [cmpd_post_content]
+				<?php echo apply_filters( 'cmpd_single_product_below_content', '' ); ?>
+                [cmpd_product_gallery]
+                [cmpd_related_product]
+                <div class="clear clearfix"></div>
+            </div>
+            <div class="clear clearfix"></div>
+        </div>
+		<div class="clear clearfix"></div>
+		<?php comments_template( '', true ); ?>
+		<div class="clear clearfix"></div>
+    </div>
+</div>

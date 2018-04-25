@@ -1,0 +1,21 @@
+<?php
+
+?>
+
+<div class="cma-board-categories">
+
+	<?php foreach ($categories as $category): ?>
+		<div class="cma-board-category">
+			<div class="cma-board-category-header">
+				<h2><a href="<?php echo esc_attr($category->getPermalink()); ?>"><?php echo $category->getName(); ?></a></h2>
+			</div>
+			<?php
+			
+			$questions = isset($questionsByCategory[$category->getId()]) ? $questionsByCategory[$category->getId()] : array();
+			echo CMA_BaseController::_loadView('answer/widget/board-topics', compact('category', 'questions', 'atts', 'displayOptions'));
+			
+			?>
+		</div>
+	<?php endforeach; ?>
+
+</div>

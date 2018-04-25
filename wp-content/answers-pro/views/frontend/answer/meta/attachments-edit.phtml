@@ -1,0 +1,15 @@
+<?php
+
+?>
+<div class="cma-attachments-edit" data-confirm-msg="<?php echo esc_attr(CMA_Labels::getLocalized('attachment_delete_confirm_msg')); ?>">
+	<h4><?php echo CMA_Labels::getLocalized('thread_attachments'); ?></h4>
+	<ul>
+		<?php foreach ($attachments as $attachment): ?>
+			<li>
+				<a href="<?php echo esc_attr($attachment->getURL()); ?>" target="_blank"><?php echo esc_html($attachment->getName()); ?></a>
+				<span class="cma-delete">&times;</span>
+				<input type="hidden" name="cma_attachments[]" value="<?php echo $attachment->getId(); ?>">
+			</li>
+		<?php endforeach; ?>
+	</ul>
+</div>

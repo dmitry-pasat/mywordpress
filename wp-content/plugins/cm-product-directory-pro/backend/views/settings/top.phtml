@@ -1,0 +1,151 @@
+<?php
+echo do_shortcode( '[cminds_free_ads id="cmpd"]' );
+?>
+
+<div class="cminds_settings_description">
+    <p>
+        <strong>Supported Shortcodes:</strong> <a href="javascript:void(0)" onclick="jQuery( this ).parent().next().slideToggle()">Show/Hide</a>
+    </p>
+
+    <ul style="display:none;list-style-type:disc;margin-left:20px;">
+        <li>Single product shortcode - [cmpd_single_product slug="product-slug"]<br><br>
+            <ul>
+                <li>* slug - the slug name of the product (the last part of the url)</li>
+            </ul>
+        </li>
+
+        <li>Product Directory Shortcode Example - [cmpd_product showfilter="1" row_product="3" cats="1" only_relevant="0" tags="tagname" product_ids="1,3,5" exclude_ids="2,4" ]<br><br>
+            <ul>
+                <li>* view - the id of the view from the following: <code>tiles, list</code>(defaults to: <code>tiles</code>)</li>
+
+                <li>* filter_search - whether to hide Search filter on Products Index Page ( set 1 to hide )</li>
+                <li>* filter_category - whether to hide Categories filter on Products Index Page ( set 1 to hide )</li>
+                <li>* filter_pricingmodel - whether to hide Pricing Model filter on Products Index Page ( set 1 to hide )</li>
+                <li>* filter_languagesupport - whether to hide Language Support filter on Products Index Page ( set 1 to hide )</li>
+                <li>* filter_targetaudience - whether to hide Target Audience filter on Products Index Page ( set 1 to hide )</li>
+                <li>* filter_tag - whether to hide Tags filter on Products Index Page ( set 1 to hide )</li>
+
+                <li>* row_product - number of the product in the row (<code>tiles</code> view only)</li>
+                <li>* page_product - number of the product on one page</li>
+
+                <li>* cats - the slug of the catagory from which the product should be displayed</li>
+                <li>* pricingmodels - the slug of additional category from which the product should be displayed</li>
+                <li>* langsupports - the slug of additional category from which the product should be displayed</li>
+                <li>* targetaudiences - the slug of additional category from which the product should be displayed</li>
+                <li>* tags - the name of the tag the product displayed should have</li>
+
+				<li>* only_relevant - use 1 if you like only to display the categories associated with products in the directory. Value should be 1 or 0</li>
+                <li>* product_ids - the IDs of the product you only want to show in directory. Value should be an ID, or comma separated IDs.</li>
+				<li>* exclude_ids - the IDs of the product you want to exclude from displaying in directory. Value should be an ID, or comma separated IDs.</li>
+            </ul>
+        </li>
+
+        <li>Product Page shortcodes:<br /><br />
+            <ul>
+
+                <li>* cmpd_categories - whether to show categories and tags box</li>
+                <li>* cmpd_post_title - display post title</li>
+                <li>* cmpd_post_content - display post content</li>
+                <li>* cmpd_featured_image - display featured image</li>
+                <li>* cmpd_back_to_index_link - display back link</li>
+            </ul>
+        </li>
+
+        <br /><li><strong>Category List</strong> <span class="cm_shortcode_quote">[cmpd_category_list]</span>
+        <ul>
+            <li>* <em>count</em> - Whether you want to display category elements (1/0)</li>
+            <li>* <em>columns</em> - Number of columns (1-6)</li>
+            <li>* <em>category</em> - Display list of Category terms (1/0)</li>
+            <li>* <em>pricingmodel</em> - Display list of Pricing Model terms (1/0)</li>
+            <li>* <em>languagesupport</em> - Display list of Language Support terms (1/0)</li>
+            <li>* <em>targetaudience</em> - Display list of Target Audience terms (1/0)</li>
+            <li>* <em>tag</em> - Display list of Tag terms (1/0)</li>
+            <li>* <em>hide_empty</em> - Whether to display categories with posts assigned (1/0)</li>
+       </ul></li>
+
+        <?php echo apply_filters('cmpd_avaliable_shortcodes', ''); ?>
+    </ul>
+
+    <p>
+        <strong>Supported HTTP GET variables:</strong> <a href="javascript:void(0)" onclick="jQuery( this ).parent().next().slideToggle()">Show/Hide</a>
+    </p>
+	<?php
+	$shortcodePageId = get_option( CMProductDirectory::SHORTCODE_PAGE_OPTION );
+	if ( $shortcodePageId ) {
+		$shortcodePageLink		 = get_page_link( $shortcodePageId );
+		$shortcodePageEditLink	 = admin_url( 'post.php?post=' . $shortcodePageId . '&action=edit' );
+	} else {
+		$shortcodePageLink		 = null;
+		$shortcodePageEditLink	 = null;
+	}
+	?>
+
+    <ul style="display:none;list-style-type:disc;margin-left:20px;">
+        <li>Link Example -   <a href="<?php echo $shortcodePageLink; ?>?showfilter=0" target="_blank"><?php echo esc_html( $shortcodePageLink ); ?>?showfilter=0</a><br><br>
+            <ul>
+                <li>* showfilter - whether to show the categories filter or not</li>
+                <li>* row_product - number of the product in the row. </li>
+                <li>* page_product - number of the product on one page</li>
+                <li>* cats - the id of the catagory from which the product should be displayed</li>
+                <li>* tags - the name of the tag the product displayed should have</li>
+            </ul>
+        </li>
+    </ul>
+
+    <p>
+        <strong>Link to the CM Product Directory page:</strong>
+        <a href="<?php echo esc_attr( $shortcodePageLink ); ?>" target="_blank"><?php echo esc_html( $shortcodePageLink ); ?></a>
+		<?php if ( !empty( $shortcodePageEditLink ) ) : ?>
+			(<a title="Edit the Product Directory Index Page" href="<?php echo esc_attr( $shortcodePageEditLink ); ?>">edit</a>)
+		<?php endif; ?>
+    </p>
+
+	<?php echo apply_filters( 'cmpd_settings_top_html', '' ); ?>
+
+    <div>
+        <form method="post">
+            <input title="Warning! This option will completely erase all of the data stored by the CM Product Directory in the database: product, options etc. &lt;br/&gt; It will also remove the shortcode page. &lt;br/&gt; It cannot be reverted." onclick="return confirm( 'All database items of CM Product Directory (products, options) will be erased. This cannot be reverted.' )" type="submit" name="cmpd_pluginCleanup" value="Cleanup database" class="cmpd-button cmtt-cleanup-button" />
+        </form>
+        <form method="post">
+            <input title="Warning! This option will reset all options in CM Product Directory to default values." onclick="return confirm( 'All settings of CM Product Directory will be reseted. This cannot be reverted.' )" type="submit" name="cmpd_pluginSetDefault" value="Set default settings" class="cmpd-button cmtt-cleanup-button" />
+        </form>
+    </div>
+
+    <div class="clear"></div>
+
+    <style type="text/css">
+        #cm-product-directory-settings-form table {border-spacing:0; width: 100%;}
+        #cm-product-directory-settings-form tr td, #cm-product-directory-settings-form tr th {padding:10px; border-bottom: solid 1px #f0f0f0; width: 30%;}
+        #cm-product-directory-settings-form tr th[colspan] {width: 100% !important;}
+        #cm-product-directory-settings-form table td input[type=text] {width: 90%; min-width: 100px; max-width: 300px;}
+        #cm-product-directory-settings-form table th {padding-left: 20px; font-weight: normal; text-align: right; vertical-align: top;}
+        #cm-product-directory-settings-form table td {vertical-align: top;}
+        #cm-product-directory-settings-form caption {color: #222; font: 600 1.3em verdana; margin: 1em 0; text-align: left;}
+        #cm-product-directory-settings-form tr:last-child td, #cm-product-directory-settings-form tr:last-child th {border-bottom: none}
+        textarea.cma-custom-css {min-width: 300px; max-width: 840px; width: 70%; height: 200px;}
+        #cm-product-directory-settings-form .tg-table-plain td, #cm-product-directory-settings-form .tg-table-plain th { border: 1px #555 solid; padding: 5px;border-collapse: collapse;text-align: center;vertical-align: middle; }
+        #cm-product-directory-settings-form .tab-content ul {list-style: circle; margin: 1em 0 1em 30px;}
+        #cm-product-directory-settings-form td ul, #cm-product-directory-settings-form td li {margin-top: 0 !important; padding: 0; list-style: disc;}
+        .server-info-table td:nth-child(3) {}
+        .server-info-table span {color: green; font-weight: bold;}
+        .server-info-table strong {color: red; font-weight: bold;}
+        h4 {font-weight: bold; margin: 2em 0 0.3em 0;}
+        #authorsAutoApprovedResults {list-style: none; margin: 0 0 0 100px !important; margin-top: -14px; border:solid 1px #ccc; padding:5px !important; width:190px; display: none;}
+        #authorsAutoApprovedResults li {list-style: none !important; margin: 0; padding: 0;}
+        #authorsAutoApprovedSearch {width: 200px;}
+        .cma-frontend-link {font-size: 120%;}
+        .cma-warning {border: 1px solid #dddddd; border-left: 4px solid #ff9900; padding: 1em; font-size: 90%; margin: 1em 0;}
+
+    </style>
+    <script type="text/javascript">
+        jQuery( document ).ready( function () {
+            jQuery( '#tabs' ).tabs();
+            jQuery( '#tabs ul[role=tablist] a' ).click( function () {
+                location.hash = this.href.substr( this.href.lastIndexOf( '#' ) + 1, this.href.length ).replace( /_/g, '-' );
+                this.blur();
+            } );
+            jQuery( '#tabs ul[role=tablist] a[href="' + location.hash.replace( /\-/g, '_' ) + '"]' ).click();
+        } );
+    </script>
+</div>
+<div class="clear"></div>

@@ -1,0 +1,9 @@
+<?php
+
+?>
+<div class="cma-question-stage-select" data-url="<?php echo esc_attr($ajaxurl); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" data-id="<?php echo $id; ?>">
+	<span class="cma-question-stage-text"><?php echo CMA_Labels::getLocalized('question_stage_set'); ?></span>
+	<select><?php foreach ($stages as $stage): ?>
+		<?php printf('<option value="%s"%s>%s</option>', esc_attr($stage), selected($stage, $currentStage, false), esc_html($stage)); ?>
+	<?php endforeach; ?></select>
+</div>

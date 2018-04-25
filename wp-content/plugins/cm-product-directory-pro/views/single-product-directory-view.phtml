@@ -1,0 +1,43 @@
+<?php if ( !empty( $post ) ):
+
+	$title = esc_html($post->post_title);
+
+	$image_id 	= CMProductDirectory::meta( $post->ID, 'cmpd_product_gallery_id' );
+	$image 		= !empty(wp_get_attachment_image($image_id, 'cmpd_image')) ? wp_get_attachment_image($image_id, 'cmpd_image') : CMProductDirectoryFrontend::getDefaultThumbnail('cmpd_image', $title);
+
+	$purchase_value = CMProductDirectory::meta( $post->ID, 'cmpd_purchase_link' );
+	$purchase = !empty($purchase_value) ? '<a href="'.esc_attr($purchase_value).'" class="cmpd_big_button cmpd_purchase_button" rel="nofollow"><span class="dashicons-cart dashicons"></span>'.esc_html(CMPD_Labels::getLocalized( 'purchase_link' )).'</a>' : '' ;
+
+
+	$demo_value = CMProductDirectory::meta( $post->ID, 'cmpd_demo_link' );
+	$demo = !empty($demo_value) ? '<a href="'.esc_attr($demo_value).'" class="cmpd_big_button" rel="nofollow"><span class="dashicons-desktop dashicons"></span>'.esc_html(CMPD_Labels::getLocalized( 'demo_link' )).'</a>' : '' ;
+
+	$video = '';
+	$displayVideo = CMPD_Settings::getOption( CMPD_Settings::OPTION_ACTIVATE_VIDEO_FIELD );
+	if ( $displayVideo )
+	{
+		$videoLink	= CMProductDirectory::meta( $post->ID, 'cmpd_product_video' );
+		$video		= '<a href="'.esc_attr($videoLink).'" class="cmpd_big_button" targe="_BLANK"><span class="dashicons-video-alt3 dashicons"></span>'.esc_html(CMPD_Labels::getLocalized( 'video_label' )).'</a>';
+	}
+
+	$details = '<a href="'.get_permalink($post->ID).'" class="cmpd_big_button"><span class="dashicons-search dashicons"></span>'.esc_html(CMPD_Labels::getLocalized( 'view_details' )).'</a>';
+?>
+
+<div class="cmpd_single_product_container">
+	<div class="cmpd_single_product_col_4">
+		<?php echo $image; ?>
+	</div>
+	<div class="cmpd_single_product_col_2">
+		<h3><?php echo $title; ?></h3>
+		[cmpd_product_pitch]
+	</div>
+	<div class="cmpd_single_product_col_4">
+		<?php echo $purchase; ?>
+		<?php echo $details; ?>
+		<?php echo $demo; ?>
+		<?php echo $video; ?>
+	</div>
+</div>
+<div class="clear"></div>
+
+<?php endif; ?>

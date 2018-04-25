@@ -1,0 +1,43 @@
+<?php
+// Link
+$permalink	= esc_attr( get_permalink( $product->ID ) );
+$setting	= CMPD_Settings::getOption( CMPD_Settings::OPTION_BUTTONS_TARGET_BLANK );
+$blank		= empty( $setting ) ? '' : 'target="_blank" ';
+$editlink 	= CMProductDirectoryFrontend::outputEditlink( $product, $atts );
+
+// Title
+$show_title		= CMPD_Settings::getOption( CMPD_Settings::CMPD_OPTION_APPEARANCE_TILES_SHOW_TITLE );
+$title_value	= $product->post_title;
+$title 			= $show_title ? '<div class="cmpd_modern_view_title"><h5><a href="'.esc_attr($permalink).'" title="'.esc_attr($title_value).'" '.esc_attr($blank).' >'.esc_html($title_value).'</a>'.$editlink.'</h5></div>' : '' ;
+
+// Image
+$logo_url			= CMProductDirectoryProductPage::getProductGallery( $product->ID );
+$logo_url			= !empty( $logo_url ) ? $logo_url[ 0 ][ 'cmpd_image' ][ 0 ] : '';
+$default_logo_url 	= CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-300-300.png';
+$image 				= !empty($logo_url) ? '<img src="'.esc_attr($logo_url).'" alt="'.esc_attr($title_value).'" />' : '<img src="'.esc_attr($default_logo_url).'" alt="'.esc_attr($title_value).'" />' ;
+
+// Button
+$show_button	= CMPD_Settings::getOption( CMPD_Settings::CMPD_OPTION_APPEARANCE_TILES_SHOW_DETAILS );
+$button_label	= CMPD_Labels::getLocalized( 'view_details' );
+$button 		= $show_button ? '<a href="'.esc_attr($permalink).'" class="cmpd_view_details_button">'.CMProductDirectory::__( $button_label ).'</a>' : '' ;
+
+//Statistics
+$statistics = CMProductDirectoryPageCount::get_statistics( CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_STATISTICS_ALL ),  $product->ID);
+
+
+?>
+<div class="cmpd_modern_view_item">
+	<div class="cmpd_modern_view_inner_container">
+		<a href="<?php echo esc_attr($permalink); ?>" title="<?php echo esc_attr($title_value); ?>" <?php echo $blank; ?>>
+			<span class="cmpd_modern_view_item_image_container">
+				<?php echo $image; ?>
+			</span>
+		</a>
+        <?php if ( $statistics ) { ?>
+            <span>Visits: <?php echo $statistics['visit'] ?></span>
+            <span>Clicks: <?php echo $statistics['transition'] ?></span>
+        <?php } ?>
+		<?php echo $title; ?>
+		<?php echo $button; ?>
+	</div>
+</div>

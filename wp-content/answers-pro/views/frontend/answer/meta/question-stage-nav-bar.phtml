@@ -1,0 +1,11 @@
+<?php
+
+?>
+<div class="cma-nav-item cma-question-stage-nav-bar-filter">
+	<select name="<?php echo esc_attr($fieldName); ?>">
+		<option value=""><?php echo CMA_Labels::getLocalized('question_stage_filter_none'); ?></option>
+		<?php foreach ($stages as $stage): ?>
+			<?php printf('<option value="%s"%s>%s</option>', esc_attr($stage), selected($stage, $currentStage, false), esc_html($stage)); ?>
+		<?php endforeach; ?>
+	</select>
+</div>

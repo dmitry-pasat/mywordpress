@@ -1,0 +1,89 @@
+<?php
+    $permalink = esc_attr(get_permalink($product->ID));
+
+    // Promoted
+    $isPromoted = get_post_meta( $product->ID, 'cmpd_promoted', true );
+    $promoted = $isPromoted == '1' ? '<span class="cmpd_directory_view_promoted">'.__( 'Promoted', CMPD_SLUG_NAME ).'</span>' : '';
+
+    // Blank
+    $linkTarget = CMPD_Settings::getOption(CMPD_Settings::OPTION_BUTTONS_TARGET_BLANK);
+    $blank = empty($linkTarget) ? '' : 'target="_blank" ';
+
+    $productPageID = CMPD_Settings::getOption(CMProductDirectory::SHORTCODE_PAGE_OPTION);
+    $productPageLink = get_page_link($productPageID) . '?query=&';
+
+     $name = $product->post_title;
+    $productName = '<h3><a href="'.esc_attr($permalink).'" '.$blank.'>'.esc_html($name).'</a>'.$promoted.CMProductDirectoryFrontend::outputEditlink( $product, $atts ).'</h3>';
+
+    // Image
+    	$image_url_array = CMProductDirectoryProductPage::getProductGallery($product->ID);
+    	$image_url = !empty($image_url_array) ? $image_url_array[0]['cmpd_image'][0] : CMPD_PLUGIN_URL . 'frontend/assets/img/default-product-300-300.png';
+    	$image = '<div class="cmpd_directory_view_image_container"><a href="'.esc_attr($permalink).'" '.$blank.'><img src="'.esc_attr($image_url).'" alt="'.esc_attr($name).'" /></a></div>';
+
+    // Categories
+        $displayCategory = CMPD_Settings::getOption( CMPD_Settings::CMPD_OPTION_APPEARANCE_DIRECTORY_DISPLAY_CATEGORY );
+        $categories_terms = wp_get_post_terms ( $product->ID, CMProductDirectoryShared::POST_TYPE_TAXONOMY );
+        $categories = '';
+        if ( $displayCategory && !empty( $categories_terms ) ):
+            $categories .= '<p class="cmpd_directory_view_category">';
+            foreach ( $categories_terms as $category ):
+                $link = get_category_link( $category->term_id );
+                $categories .= '<a href="'.esc_attr($productPageLink).'cmcats='.esc_attr($category->slug).'" title="'.esc_attr($category->name).'">'.esc_html($category->name).'</a>';
+            endforeach;
+            $categories .= '</p>';
+        endif;
+
+    // Description
+        $displayDescription = CMPD_Settings::getOption( CMPD_Settings::CMPD_OPTION_APPEARANCE_DIRECTORY_DISPLAY_DESCRIPTION );
+        $description = '';
+        if ( $displayDescription )
+        {
+            $productContent = wpautop( $product->post_content );
+            $productContent = substr( $productContent, 0, strpos( $productContent, '</p>' ) + 4 );
+            $productContent = strip_tags( $productContent, '<a><strong><em>' );
+            $description   = has_excerpt( $product->ID ) ? '<p class="cmpd_directory_view_description">'.esc_html($product->post_excerpt).'</p>' : '<p class="cmpd_directory_view_description">'.esc_html($productContent).'</p>' ;
+        }
+
+    /**
+     * Star Rating
+     */
+    $rating = '';
+    if ( class_exists('CMStarRating')) {
+        $rating_enabled = get_option('cmpd_rating_enabled');
+        $displayRating  = CMPD_Settings::getOption( CMPD_Settings::CMPD_OPTION_APPEARANCE_DIRECTORY_DISPLAY_RATING );
+
+        if ( $rating_enabled && $displayRating ) {
+           $rating = $displayRating ? do_shortcode('[cmpd_cm_star_rating ratingfor='.$product->ID.' disablerating="1"]') : '';
+        }
+    }
+
+    // Button
+    $button_label   = CMPD_Labels::getLocalized( 'view_details' );
+    $button = '<a href="'.esc_attr($permalink).'" class="cmpd_big_button"><span class="dashicons-search dashicons"></span>'.esc_html($button_label).'</a>';
+
+    //Statistics
+    $statistics = CMProductDirectoryPageCount::get_statistics( CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_STATISTICS_ALL ),  $product->ID);
+
+
+?>
+
+<div class="cmpd_directory_view_item">
+    <div class="cmpd_directory_view_col_5a">
+        <?php echo $image; ?>
+    </div>
+    <div class="cmpd_directory_view_col_5b">
+        <?php echo $productName; ?>
+        <?php echo $categories; ?>
+        <?php echo $description; ?>
+    </div>
+    <div class="cmpd_directory_view_col_5c">
+        <?php if ( $statistics ) { ?>
+            <span>Visits: <?php echo $statistics['visit'] ?></span>
+            <br>
+            <span>Clicks: <?php echo $statistics['transition'] ?></span>
+        <?php } ?>
+        <?php echo $rating; ?>
+        <?php echo $button; ?>
+    </div>
+</div>
+<div class="clear"></div>

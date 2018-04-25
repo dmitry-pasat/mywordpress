@@ -1,0 +1,56 @@
+<?php
+	// Title
+	$title = $product->post_title;
+
+	// Promoted
+    $isPromoted = get_post_meta( $product->ID, 'cmpd_promoted', true );
+    $promoted 	= $isPromoted == '1' ? '<span class="cmpd_list_view_promoted">'.__( 'Promoted', CMPD_SLUG_NAME ).'</span>' : '';
+
+    // Pitch
+    $displayPitch = CMPD_Settings::getOption(CMPD_Settings::CMPD_OPTION_APPEARANCE_LIST_PITCH);
+    $pitch = CMProductDirectory::meta( $product->ID, 'cmpd_product_pitch' );
+ 	$pitch = $displayPitch && !empty($pitch) ? '<p class="cmpd_list_view_pitch">'.$pitch.'</p>' : '' ;
+
+    /**
+     * Star Rating
+     */
+    $rating = '';
+    if ( class_exists('CMStarRating')) {
+        $rating_enabled = get_option('cmpd_rating_enabled');
+        $displayRating = CMPD_Settings::getOption(CMPD_Settings::CMPD_OPTION_APPEARANCE_LIST_RATING);
+
+        if ( $rating_enabled && $displayRating ) {
+           $rating = $displayRating ? do_shortcode('[cmpd_cm_star_rating ratingfor='.$product->ID.' disablerating="1" hideaverage="1" hidecount="1"]') : '';
+        }
+    }
+
+	$target		 = CMPD_Settings::getOption( CMPD_Settings::OPTION_BUTTONS_TARGET_BLANK );
+	$target		 = $target ? 'target="_blank"' : '';
+    $permalink	 = esc_attr( get_permalink( $product->ID ) );
+
+    //Statistics
+    $statistics = CMProductDirectoryPageCount::get_statistics( CMPD_Settings::getOption( CMPD_Settings::OPTION_PRODUCT_STATISTICS_ALL ),  $product->ID);
+
+?>
+
+<li class="cmpd_list_view_item">
+	<div class="cmpd_list_view_content">
+		<p class="cmpd_list_view_title">
+			<a href="<?php echo $permalink; ?>" title="<?php echo esc_attr($title); ?>" <?php echo $target; ?> >
+				<?php echo esc_html($title); ?>
+			</a>
+            <?php if ( $statistics ) { ?>
+                <span>Visits: <?php echo $statistics['visit'] ?></span>
+                <span>Clicks: <?php echo $statistics['transition'] ?></span>
+            <?php } ?>
+			<?php echo $promoted; ?>
+			<?php echo CMProductDirectoryFrontend::outputEditlink( $product, $atts ); ?>
+		</p>
+		<?php echo $pitch; ?>
+	</div>
+	<?php if ( $displayRating ) { ?>
+		<div class="cmpd_list_view_rating">
+			<?php echo $rating; ?>
+		</div>
+	<?php } ?>
+</li>

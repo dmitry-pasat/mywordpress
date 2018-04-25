@@ -1,0 +1,8 @@
+<?php
+
+?>
+<div class="cma-board-topics cma-thread-list">
+	<?php foreach ($questions as $thread): ?>
+		<?php do_action('cma_question_snippet', $thread, $displayOptions); ?>
+	<?php endforeach; ?>
+</div>

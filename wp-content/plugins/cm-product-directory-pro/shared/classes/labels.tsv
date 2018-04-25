@@ -1,0 +1,54 @@
+Paused	Paused	Status when the product is paused.	General
+Published	Published	Status when the product is not paused.	General
+
+product_found:	Products Found:	Label before the amount of products found.	General
+nothing_found	No Products has been found.	Message being displayed when search ends up with no results.	General
+search_label	Search	Search input label.	Product directory
+search_placeholder	Please enter keywords	Search input placeholder.	Product directory
+post_per_page_lebel	Items per page:	Label for "Products per page" 	Product directory
+
+cat_filter_label	Category:	Label before the category filter.	Product directory
+pricingmodel_filter_label	Pricing Model:	Label before the category filter.	Product directory
+langsupport_filter_label	Language Support:	Label before the category filter.	Product directory
+targetaudience_filter_label	Target Audience:	Label before the category filter.	Product directory
+tag_filter_label	Tag:	Label before the tag filter.	Product directory
+
+filter_all	All	Label for the "All" categories button.	Product directory
+search_submit	Filter	Search submit button label.	Product directory
+
+product_page_backlink_label	Back to the Product Directory index	Label for "Back link" 	Product page
+company_name	Company name:	Label for "Company name"	Product page
+year_founded	Year founded: 	Label for "Year founded" 	Product page
+tags	Tags:	Label for the "Tag"	Product page
+category	Categories:	Label for the "Category"	Product page
+
+address	Address: 	Label for "Buisness Address"	Product page
+cityTown	City/Town:	Label for "City/Town"	Product page
+stateCounty	State:	Label for "State"	Product page
+postalcode	Zip:	Label for "Zip Code"	Product page
+region	Region:	Label for "Region"	Product page
+country	Country:	Label for "Country"	Product page
+
+product_name	 	Label for "Product Name" 	Product page
+product_pitch	  	Label for "Product Pitch" 	Product page
+product_page_you_may_also_like	Related products	Label for "Related products"	Product page
+product_publish_date	Publish date	Label for "Publish date"	Product page
+product_update_date	Update date	Label for "Update date"	Product page
+
+product_cost	Product cost	Label for "Product Cost"	Product page
+purchase_link	Purchase product	Label for "Purchase Link"	Buttons
+demo_link	Demo link	Label for "Demo Link"	Product page
+product_page	Product page	Label for "Product Page"	Product page
+
+web_url	Website 	Label for "Website address"	Info box
+bemail	Contact 	Label for "Product email or contact info"	Info box
+twitter_name	Twitter 	Label for "Twitter page"	Info box
+alexa_name	Alexa Rank 	Label for "Alexa Rank"	Info box
+facebook_name	Facebook 	Label for "Facebook page"	Info box
+linkedin	Linkedin 	Label for "Linkedin Profile"	Info box
+google	Google+	Label for "Google+ page"	Info box
+phone	Phone 	Label for "Phone number"	Info box
+rss	RSS 	Label for "RSS feed link"	Info box
+
+view_details	View Details	Label for the "View Details" button	Buttons
+video_label	Watch Video	Label for the "Watch Video" button	Buttons
